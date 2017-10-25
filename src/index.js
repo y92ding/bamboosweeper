@@ -46,29 +46,30 @@ class Game extends React.Component {
     };
   }
 
-  revealSquare(pos, playerGrid, calledOnNull = true) {
+  revealSquare(pos, playerGrid) {
+    console.log("revealing square "+pos.x+" "+pos.y);
     var y = pos.y;
     var x = pos.x;
     var width = this.state.size.width;
     var height = this.state.size.height;
     var arr = this.state.secretGrid;
-    var revealSquare = this.revealSquare;
     if (arr[y*width+x] == 'x') {
       console.error("Calling revealSquare on a mine square...Abort!!!");
       return;
     }
-    if (calledOnNull && arr[y*width+x] != null) {
-      console.error("Calling revealSquare(calledOnNull == true) on a not null square...Abort!!!");
-    }
+
     playerGrid[y*width+x] = arr[y*width+x];
-    if (y > 0 && x > 0 && arr[(y-1)*width+x-1] == 'x') revealSquare({x: x-1, y: y-1}, playerGrid);
-    if (y > 0 && arr[(y-1)*width+x] == 'x') revealSquare({x: x, y: y-1}, playerGrid);
-    if (y > 0 && x < width-1 && arr[(y-1)*width+x+1] == 'x') revealSquare({x: x+1, y: y-1}, playerGrid);
-    if (x > 0 && arr[y*width+x-1] == 'x') revealSquare({x: x-1, y: y}, playerGrid);
-    if (x < width-1 && arr[y*width+x+1] == 'x') revealSquare({x: x+1, y: y}, playerGrid);
-    if (y < height-1 && x > 0 && arr[(y+1)*width+x-1] == 'x') revealSquare({x: x-1, y: y+1}, playerGrid);
-    if (y < height-1 && arr[(y+1)*width+x] == 'x') revealSquare({x: x, y: y+1}, playerGrid);
-    if (y < height-1 && x < width-1 && arr[(y+1)*width+x+1] == 'x') revealSquare({x: x+1, y: y+1}, playerGrid);
+    console.log("revealed square "+x+" "+y+" is"+playerGrid[y*width+x]);
+    if (playerGrid[y*width+x] == '0') {
+      if (y > 0 && x > 0 && playerGrid[(y-1)*width+x-1] == null) this.revealSquare({x: x-1, y: y-1}, playerGrid);
+      if (y > 0 && playerGrid[(y-1)*width+x] == null) this.revealSquare({x: x, y: y-1}, playerGrid);
+      if (y > 0 && x < width-1 && playerGrid[(y-1)*width+x+1] == null) this.revealSquare({x: x+1, y: y-1}, playerGrid);
+      if (x > 0 && playerGrid[y*width+x-1] == null) this.revealSquare({x: x-1, y: y}, playerGrid);
+      if (x < width-1 && playerGrid[y*width+x+1] == null) this.revealSquare({x: x+1, y: y}, playerGrid);
+      if (y < height-1 && x > 0 && playerGrid[(y+1)*width+x-1] == null) this.revealSquare({x: x-1, y: y+1}, playerGrid);
+      if (y < height-1 && playerGrid[(y+1)*width+x] == null) this.revealSquare({x: x, y: y+1}, playerGrid);
+      if (y < height-1 && x < width-1 && playerGrid[(y+1)*width+x+1] == null) this.revealSquare({x: x+1, y: y+1}, playerGrid);
+    }
   }
 
   onClickSquare(i) {
@@ -80,7 +81,7 @@ class Game extends React.Component {
     }
 
     var width = this.state.size.width;
-    this.revealSquare({x: i%width, y: i/width}, playerGrid, false)
+    this.revealSquare({x: i%width, y: Math.floor(i/width)}, playerGrid);
 
     this.setState({
       playerGrid: playerGrid,
@@ -135,7 +136,7 @@ function makeSecretGrid(mines, size) {
     for (let k = 0; k < size.width; k++) {
       if (arr[j*size.width+k] != 'x') {
         var surroundingMines = countSurroundingMines({x: k, y: j}, size, arr);
-        if (surroundingMines) arr[j*size.width+k] = surroundingMines;
+        arr[j*size.width+k] = surroundingMines;
       }
     }
   }
