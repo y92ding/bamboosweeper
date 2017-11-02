@@ -64,7 +64,7 @@ class Game extends React.Component {
     }
 
     playerGrid[y*width+x] = arr[y*width+x];
-    if (playerGrid[y*width+x] === '0') {
+    if (playerGrid[y*width+x] === 0) {
       if (y > 0 && x > 0 && playerGrid[(y-1)*width+x-1] == null) this.revealSquare({x: x-1, y: y-1}, playerGrid);
       if (y > 0 && playerGrid[(y-1)*width+x] == null) this.revealSquare({x: x, y: y-1}, playerGrid);
       if (y > 0 && x < width-1 && playerGrid[(y-1)*width+x+1] == null) this.revealSquare({x: x+1, y: y-1}, playerGrid);
@@ -102,12 +102,9 @@ class Game extends React.Component {
 
   render() {
     return (
-      <div>
       <Grid size={this.state.size} grid={this.state.playerGrid}
           onClickSquare={(i) => this.onClickSquare(i)}
           onLeftClickSquare={(i)=>this.onLeftClickSquare(i)}/>
-          <button onContextMenu={(e)=>{e.preventDefault()}} onMouseDown={(event)=>{console.log("you pressed button"+event.button)}}>Click</button>
-          </div>
     );
   }
 
