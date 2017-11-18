@@ -126,6 +126,11 @@ class Game extends React.Component {
     }
     var newMinesLeft = this.state.minesLeft - 1;
     var newStatus = newMinesLeft === 0 ? "won" : "playing";
+    // if won, the following message will be displayed, and then M will show on the square clicked.
+    // it's a feature, not a bug :)
+    if (newStatus === "won") {
+      alert("Congratulatousationalimory! You won! Good for you!");
+    }
     this.setState({
       playerGrid: playerGrid,
       minesLeft: newMinesLeft,
