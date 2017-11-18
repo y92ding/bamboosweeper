@@ -49,10 +49,16 @@ class Game extends React.Component {
       },
       playerGrid: Array(100).fill(null),
       secretGrid: secretGrid,
+      minesLeft: 15,
+      status: "playing",
     };
   }
 
   revealSquare(pos, playerGrid) {
+    if (this.state.status !== "playing") {
+      console.error("Calling revealSquare when status is not 'playing'...Abort!!!");
+      return;
+    }
     var y = pos.y;
     var x = pos.x;
     var width = this.state.size.width;
@@ -77,13 +83,19 @@ class Game extends React.Component {
   }
 
   onClickSquare(i) {
-    var playerGrid = this.state.playerGrid.slice();
-
-    if (this.state.secretGrid[i] === 'x') {
-      alert("Clicked on mine!");
+    if (this.state.status !== "playing") {
       return;
     }
 
+    if (this.state.secretGrid[i] === 'x') {
+      alert("Clicked on mine! You lost!");
+      this.setState({
+        status: "lost",
+      })
+      return;
+    }
+
+    var playerGrid = this.state.playerGrid.slice();
     var width = this.state.size.width;
     this.revealSquare({x: i%width, y: Math.floor(i/width)}, playerGrid);
 
@@ -93,10 +105,30 @@ class Game extends React.Component {
   }
 
   onLeftClickSquare(i) {
+    if (this.state.status !== "playing") {
+      return;
+    }
+
+    if (this.state.secretGrid[i] !== 'x') {
+      alert("It's not a mine! You lost!");
+      this.setState({
+        status: "lost",
+      });
+      return;
+    }
+
     var playerGrid = this.state.playerGrid.slice();
     playerGrid[i] = 'M';
+    if (this.state.minesLeft <= 0) {
+      console.error("# of mines left already <= 0...Abort!!!");
+      return;
+    }
+    var newMinesLeft = this.state.minesLeft - 1;
+    var newStatus = newMinesLeft === 0 ? "won" : "playing";
     this.setState({
       playerGrid: playerGrid,
+      minesLeft: newMinesLeft,
+      status: newStatus,
     })
   }
 
