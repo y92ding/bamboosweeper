@@ -59,6 +59,7 @@ class Game extends React.Component {
       console.error("Calling revealSquare when status is not 'playing'...Abort!!!");
       return;
     }
+
     var y = pos.y;
     var x = pos.x;
     var width = this.state.size.width;
