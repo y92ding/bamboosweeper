@@ -88,8 +88,12 @@ class Game extends React.Component {
       return;
     }
 
+    if (this.state.playerGrid[i] !== null) {
+      return;
+    }
+
     if (this.state.secretGrid[i] === 'x') {
-      alert("Clicked on mine! You lost!");
+      //alert("Clicked on mine! You lost!");
       this.setState({
         status: "lost",
       })
@@ -110,8 +114,12 @@ class Game extends React.Component {
       return;
     }
 
+    if (this.state.playerGrid[i] !== null) {
+      return;
+    }
+    
     if (this.state.secretGrid[i] !== 'x') {
-      alert("It's not a mine! You lost!");
+      // alert("It's not a mine! You lost!");
       this.setState({
         status: "lost",
       });
@@ -126,11 +134,12 @@ class Game extends React.Component {
     }
     var newMinesLeft = this.state.minesLeft - 1;
     var newStatus = newMinesLeft === 0 ? "won" : "playing";
-    // if won, the following message will be displayed, and then M will show on the square clicked.
-    // it's a feature, not a bug :)
-    if (newStatus === "won") {
-      alert("Congratulatousationalimory! You won! Good for you!");
-    }
+    // // if won, the following message will be displayed,
+    // // and then M will show on the square clicked.
+    // // it's a feature, not a bug :)
+    // if (newStatus === "won") {
+    //   alert("Congratulatousationalimory! You won! Good for you!");
+    // }
     this.setState({
       playerGrid: playerGrid,
       minesLeft: newMinesLeft,
@@ -139,10 +148,21 @@ class Game extends React.Component {
   }
 
   render() {
+    var gameStatusCaption;
+    if (this.state.status === "won") {
+      gameStatusCaption = "Congratulations! You won!";
+    } else if (this.state.status === "lost") {
+      gameStatusCaption = "You lost! :D!";
+    } else if (this.state.status === "playing") {
+      gameStatusCaption = "There are " + this.state.minesLeft + " mines left.";
+    }
     return (
-      <Grid size={this.state.size} grid={this.state.playerGrid}
-          onClickSquare={(i) => this.onClickSquare(i)}
-          onLeftClickSquare={(i)=>this.onLeftClickSquare(i)}/>
+      <div>
+        <Grid size={this.state.size} grid={this.state.playerGrid}
+            onClickSquare={(i) => this.onClickSquare(i)}
+            onLeftClickSquare={(i)=>this.onLeftClickSquare(i)}/>
+        <p>{gameStatusCaption}</p>
+      </div>
     );
   }
 
