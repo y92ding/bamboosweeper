@@ -3,14 +3,14 @@ import ReactDOM from 'react-dom';
 import './index.css'
 
 class Square extends React.Component {
-  onLeftClick(e) {
+  onRightClick(e) {
     e.preventDefault();
-    this.props.onLeftClick();
+    this.props.onRightClick();
   }
   render() {
     return (
         <button className="square" onClick={this.props.onClick}
-            onContextMenu={(e)=>{this.onLeftClick(e)}}>
+            onContextMenu={(e)=>{this.onRightClick(e)}}>
           {this.props.value}
         </button>
     );
@@ -23,9 +23,9 @@ class Grid extends React.Component {
     for (let i = 0; i < this.props.size.height; i++) {
       var row = [];
       for (let j = 0; j < this.props.size.width; j++) {
-        row.push(<Square key={j} value={this.props.grid[i*10+j]}
+        row.push(<Square key={j} value={this.props.grid[i*this.props.size.width+j]}
             onClick={()=>this.props.onClickSquare(i*this.props.size.width+j)}
-            onLeftClick={()=>this.props.onLeftClickSquare(i*this.props.size.width+j)}/>);
+            onRightClick={()=>this.props.onRightClickSquare(i*this.props.size.width+j)}/>);
       }
       grid.push(<div key={i} className="board-row">{row}</div>);
     }
@@ -38,18 +38,15 @@ class Grid extends React.Component {
   }
 };
 
-class Game extends React.Component {
+class SimpleGame extends React.Component {
   constructor(props) {
     super(props);
-    var secretGrid = makeSecretGrid(15, {width:10, height:10});
+    var secretGrid = makeSecretGrid(this.props.size);
+    var squareCount = this.props.size.width * this.props.size.height;
     this.state = {
-      size: {
-        width: 10,
-        height: 10,
-      },
-      playerGrid: Array(100).fill(null),
+      playerGrid: Array(squareCount).fill(null),
       secretGrid: secretGrid,
-      minesLeft: 15,
+      minesLeft: this.props.size.mines,
       status: "playing",
     };
   }
@@ -62,8 +59,8 @@ class Game extends React.Component {
 
     var y = pos.y;
     var x = pos.x;
-    var width = this.state.size.width;
-    var height = this.state.size.height;
+    var width = this.props.size.width;
+    var height = this.props.size.height;
     var arr = this.state.secretGrid;
     if (arr[y*width+x] === 'x') {
       console.error("Calling revealSquare on a mine square...Abort!!!");
@@ -71,6 +68,7 @@ class Game extends React.Component {
     }
 
     playerGrid[y*width+x] = arr[y*width+x];
+
     if (playerGrid[y*width+x] === 0) {
       if (y > 0 && x > 0 && playerGrid[(y-1)*width+x-1] == null) this.revealSquare({x: x-1, y: y-1}, playerGrid);
       if (y > 0 && playerGrid[(y-1)*width+x] == null) this.revealSquare({x: x, y: y-1}, playerGrid);
@@ -100,16 +98,16 @@ class Game extends React.Component {
       return;
     }
 
-    var playerGrid = this.state.playerGrid.slice();
-    var width = this.state.size.width;
-    this.revealSquare({x: i%width, y: Math.floor(i/width)}, playerGrid);
+    var newPlayerGrid = this.state.playerGrid.slice();
+    var width = this.props.size.width;
+    this.revealSquare({x: i%width, y: Math.floor(i/width)}, newPlayerGrid);
 
     this.setState({
-      playerGrid: playerGrid,
+      playerGrid: newPlayerGrid,
     });
   }
 
-  onLeftClickSquare(i) {
+  onRightClickSquare(i) {
     if (this.state.status !== "playing") {
       return;
     }
@@ -117,7 +115,7 @@ class Game extends React.Component {
     if (this.state.playerGrid[i] !== null) {
       return;
     }
-    
+
     if (this.state.secretGrid[i] !== 'x') {
       // alert("It's not a mine! You lost!");
       this.setState({
@@ -158,9 +156,9 @@ class Game extends React.Component {
     }
     return (
       <div>
-        <Grid size={this.state.size} grid={this.state.playerGrid}
+        <Grid size={this.props.size} grid={this.state.playerGrid}
             onClickSquare={(i) => this.onClickSquare(i)}
-            onLeftClickSquare={(i)=>this.onLeftClickSquare(i)}/>
+            onRightClickSquare={(i)=>this.onRightClickSquare(i)}/>
         <p>{gameStatusCaption}</p>
       </div>
     );
@@ -168,8 +166,26 @@ class Game extends React.Component {
 
 };
 
+class FancyGame extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      size: {
+        width: 15,
+        height: 15,
+        mines: 30,
+      },
+    };
+  }
+
+  render() {
+    return <SimpleGame size={this.state.size} />;
+  }
+
+};
+
 ReactDOM.render(
-  <Game />,
+  <FancyGame />,
   document.getElementById("root")
 );
 
@@ -194,11 +210,12 @@ function countSurroundingMines(pos, size, arr) {
   return count;
 }
 
-function makeSecretGrid(mines, size) {
+function makeSecretGrid(size) {
   var arr = Array(size.width*size.height).fill(null);
-  arr.fill('x', 0, mines);
-  for (let i = 0; i < mines; i++) {
-    let des = Math.floor(Math.random(2)*100);
+  arr.fill('x', 0, size.mines);
+  for (let i = 0; i < size.mines; i++) {
+    let des = Math.floor(Math.random()*(size.width*size.height));
+    console.log(des);
     let temp = arr[i];
     arr[i] = arr[des];
     arr[des] = temp;
