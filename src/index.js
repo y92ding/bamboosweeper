@@ -48,6 +48,8 @@ class SimpleGame extends React.Component {
       secretGrid: secretGrid,
       minesLeft: this.props.size.mines,
       status: "playing",
+      caption: "Left click to reveal a grid, " +
+          "or right click to defuse a mine. Enjoy the game :)"
     };
   }
 
@@ -83,17 +85,23 @@ class SimpleGame extends React.Component {
 
   onClickSquare(i) {
     if (this.state.status !== "playing") {
+      this.setState({
+        caption: "The game has ended. Ctrl+R to play again.",
+      })
       return;
     }
 
     if (this.state.playerGrid[i] !== null) {
+      this.setState({
+        caption: "This grid is already revealed. Try another one.",
+      })
       return;
     }
 
     if (this.state.secretGrid[i] === 'x') {
-      //alert("Clicked on mine! You lost!");
       this.setState({
         status: "lost",
+        caption: "You clicked on a mine! You lost. :(",
       })
       return;
     }
@@ -104,22 +112,29 @@ class SimpleGame extends React.Component {
 
     this.setState({
       playerGrid: newPlayerGrid,
+      caption: "There are " + this.state.minesLeft + " mines left.",
     });
   }
 
   onRightClickSquare(i) {
     if (this.state.status !== "playing") {
+      this.setState({
+        caption: "The game has ended. Ctrl+R to play again.",
+      })
       return;
     }
 
     if (this.state.playerGrid[i] !== null) {
+      this.setState({
+        caption: "This grid is already revealed. Try another one.",
+      })
       return;
     }
 
     if (this.state.secretGrid[i] !== 'x') {
-      // alert("It's not a mine! You lost!");
       this.setState({
         status: "lost",
+        caption: "This is not a mine! You lost. :(",
       });
       return;
     }
@@ -131,35 +146,31 @@ class SimpleGame extends React.Component {
       return;
     }
     var newMinesLeft = this.state.minesLeft - 1;
-    var newStatus = newMinesLeft === 0 ? "won" : "playing";
-    // // if won, the following message will be displayed,
-    // // and then M will show on the square clicked.
-    // // it's a feature, not a bug :)
-    // if (newStatus === "won") {
-    //   alert("Congratulatousationalimory! You won! Good for you!");
-    // }
+
     this.setState({
       playerGrid: playerGrid,
       minesLeft: newMinesLeft,
-      status: newStatus,
     })
+
+    if (newMinesLeft === 0) {
+      this.setState({
+        status: "won",
+        caption: "All mines are defused. You won!!! :D",
+      })
+    } else {
+      this.setState({
+        caption: "There are " + newMinesLeft + " mines left.",
+      })
+    }
   }
 
   render() {
-    var gameStatusCaption;
-    if (this.state.status === "won") {
-      gameStatusCaption = "Congratulations! You won!";
-    } else if (this.state.status === "lost") {
-      gameStatusCaption = "You lost! :D!";
-    } else if (this.state.status === "playing") {
-      gameStatusCaption = "There are " + this.state.minesLeft + " mines left.";
-    }
     return (
       <div>
         <Grid size={this.props.size} grid={this.state.playerGrid}
             onClickSquare={(i) => this.onClickSquare(i)}
             onRightClickSquare={(i)=>this.onRightClickSquare(i)}/>
-        <p>{gameStatusCaption}</p>
+        <p>{this.state.caption}</p>
       </div>
     );
   }
