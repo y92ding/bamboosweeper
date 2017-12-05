@@ -41,20 +41,33 @@ class Grid extends React.Component {
 class SimpleGame extends React.Component {
   constructor(props) {
     super(props);
+    this.startTime;
+    this.runTimer;
     var secretGrid = makeSecretGrid(this.props.size);
     var squareCount = this.props.size.width * this.props.size.height;
+    var caption = "Left click to reveal a grid, " +
+        "or right click to defuse a mine. Enjoy the game :)";
     this.state = {
       playerGrid: Array(squareCount).fill(null),
       secretGrid: secretGrid,
       minesLeft: this.props.size.mines,
-      status: "playing",
-      caption: "Left click to reveal a grid, " +
-          "or right click to defuse a mine. Enjoy the game :)"
+      status: "ready",
+      caption: caption,
+      timer: 0.0,
     };
   }
 
+  updateTimer(self) {
+    var newTime = (Math.floor((new Date().getTime() -
+        this.startTime) / 100) / 10).toFixed(1);
+    self.setState({
+      timer: newTime,
+    })
+  }
+
   revealSquare(pos, playerGrid) {
-    if (this.state.status !== "playing") {
+    if (this.state.status !== "playing" &&
+        this.state.status !== "ready") {
       console.error("Calling revealSquare when status is not 'playing'...Abort!!!");
       return;
     }
@@ -84,7 +97,13 @@ class SimpleGame extends React.Component {
   }
 
   onClickSquare(i) {
-    if (this.state.status !== "playing") {
+    if (this.state.status === "ready") {
+      this.startTime = new Date().getTime();
+      this.runTimer = setInterval(()=>this.updateTimer(this), 100);
+      this.setState({
+        status: "playing",
+      })
+    } else if (this.state.status !== "playing") {
       this.setState({
         caption: "The game has ended. Ctrl+R to play again.",
       })
@@ -99,6 +118,7 @@ class SimpleGame extends React.Component {
     }
 
     if (this.state.secretGrid[i] === 'x') {
+      clearInterval(this.runTimer);
       this.setState({
         status: "lost",
         caption: "You clicked on a mine! You lost. :(",
@@ -117,7 +137,13 @@ class SimpleGame extends React.Component {
   }
 
   onRightClickSquare(i) {
-    if (this.state.status !== "playing") {
+    if (this.state.status === "ready") {
+      this.startTime = new Date().getTime();
+      this.startTimer = setInterval(()=>this.updateTimer(this), 100);
+      this.setState({
+        status: "playing",
+      })
+    } else if (this.state.status !== "playing") {
       this.setState({
         caption: "The game has ended. Ctrl+R to play again.",
       })
@@ -132,6 +158,7 @@ class SimpleGame extends React.Component {
     }
 
     if (this.state.secretGrid[i] !== 'x') {
+      clearInterval(this.runTimer);
       this.setState({
         status: "lost",
         caption: "This is not a mine! You lost. :(",
@@ -153,6 +180,7 @@ class SimpleGame extends React.Component {
     })
 
     if (newMinesLeft === 0) {
+      clearInterval(this.runTimer);
       this.setState({
         status: "won",
         caption: "All mines are defused. You won!!! :D",
@@ -167,6 +195,7 @@ class SimpleGame extends React.Component {
   render() {
     return (
       <div>
+        <h3>{this.state.timer}</h3>
         <Grid size={this.props.size} grid={this.state.playerGrid}
             onClickSquare={(i) => this.onClickSquare(i)}
             onRightClickSquare={(i)=>this.onRightClickSquare(i)}/>
