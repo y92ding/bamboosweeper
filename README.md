@@ -1,3 +1,11 @@
+## Play the Game
+
+- You can play the game here: [Bamboosweeper](https://y92ding.github.io/basically-minesweeper/)
+- This is an ongoing project. Features and the interface will be updated continually.
+- Enjoy the game! :D
+
+##
+
 This project was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 
 Below you will find some information on how to perform common tasks.<br>
