@@ -1,6 +1,10 @@
 body {
   font: 14px "Century Gothic", Futura, sans-serif;
-  margin: 20px;
+  margin-left: 180px;
+  margin-top: 40px;
+  background-image: url("two-pandas-watercolor-painting-joanna-szmerdt.jpg");
+  background-repeat: no-repeat;
+  background-position: right;
 }
 
 ol, ul {
@@ -18,8 +22,8 @@ ol, ul {
 }
 
 .square {
-  background: #fff;
-  border: 1px solid #999;
+  background: #e5e5e5;
+  border: 1px solid #d6d0d0;
   float: left;
   font-size: 24px;
   font-weight: bold;
@@ -45,6 +49,6 @@ ol, ul {
   flex-direction: row;
 }
 
-.game-info {
-  margin-left: 20px;
+.reference {
+  
 }

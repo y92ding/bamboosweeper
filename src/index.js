@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'semantic-ui-css/semantic.min.css'
 import './index.css'
+import { Button } from 'semantic-ui-react'
 
 class Square extends React.Component {
   onRightClick(e) {
@@ -9,7 +11,7 @@ class Square extends React.Component {
   }
   render() {
     return (
-        <button className="square" onClick={this.props.onClick}
+        <button class='square' onClick={this.props.onClick}
             onContextMenu={(e)=>{this.onRightClick(e)}}>
           {this.props.value}
         </button>
@@ -219,7 +221,12 @@ class FancyGame extends React.Component {
   }
 
   render() {
-    return <SimpleGame size={this.state.size} />;
+    return (
+     <div>
+       <SimpleGame size={this.state.size} />
+       <p class="reference">(background image by joanna-szmerdt)</p>
+     </div>
+   );
   }
 
 };
