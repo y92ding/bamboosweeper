@@ -1,24 +1,21 @@
 body {
-  font: 14px "Century Gothic", Futura, sans-serif;
-  margin-left: 180px;
-  margin-top: 40px;
-  background-image: url("two-pandas-watercolor-painting-joanna-szmerdt.jpg");
+  font: 15px "Century Gothic", Futura, sans-serif;
+  margin: 0em;
+  background-image: url("two-pandas.jpg");
   background-repeat: no-repeat;
   background-position: right;
+  background-attachment: fixed;
 }
 
-ol, ul {
-  padding-left: 30px;
+.game-column {
+  float: left;
+  width: 55%;
 }
 
 .board-row:after {
   clear: both;
   content: "";
   display: table;
-}
-
-.status {
-  margin-bottom: 10px;
 }
 
 .square {
@@ -44,11 +41,23 @@ ol, ul {
   background: #ddd;
 }
 
-.game {
-  display: flex;
-  flex-direction: row;
+.title {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  margin-top: 2em;
 }
 
-.reference {
-  
+.grid {
+  display: table;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.story {
+  text-align: center;
+  margin: 2em;
+  display: block;
 }
