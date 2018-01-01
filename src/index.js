@@ -266,12 +266,17 @@ class FancyGame extends React.Component {
   }
 
   render() {
-    var story = "Brenda the panda is hungry. She needs some bamboos."
+    var story = "Brenda the panda is hungry. She needs some bamboos.(To be continued...)"
     var view;
 
     switch (this.state.view) {
       case 'story':
-        view = <p className="story">{story}</p>;
+        view = (
+          <div>
+            <img className="title" src="bamboosweeper.png" alt="Bamboosweeper"/>
+            <p className="story">{story}</p>
+          </div>
+        );
         break;
       case 'game':
         view = <SimpleGame className="grid" size={this.state.gridSize} />;
@@ -285,7 +290,7 @@ class FancyGame extends React.Component {
 
     return (
       <div className="game-column">
-        <img className="title" src="bamboosweeper.png" alt="Bamboosweeper"/>
+
         <Menu pointing secondary>
           <Menu.Item name='story' active={'story' === this.state.view} onClick={this.handleItemClick} />
           <Menu.Item name='game' active={'game' === this.state.view} onClick={this.handleItemClick} />

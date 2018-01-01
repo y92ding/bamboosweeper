@@ -11,6 +11,7 @@ body {
 
 .game-column {
   float: left;
+  margin: 1em;
   width: 60%;
 }
 
@@ -60,6 +61,6 @@ body {
 
 .story {
   text-align: center;
-  margin: 2em;
+  margin: 1em;
   display: block;
 }
