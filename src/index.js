@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'semantic-ui-css/semantic.min.css'
 import './index.css'
-import { Button } from 'semantic-ui-react'
+import { Menu, Segment } from 'semantic-ui-react'
 
 class Square extends React.Component {
   onRightClick(e) {
@@ -257,6 +257,12 @@ class FancyGame extends React.Component {
         mines: 30,
       },
     };
+    this.handleItemClick = this.handleItemClick.bind(this);
+  }
+
+  handleItemClick(e, {name}) {
+    this.setState({view: name,});
+    console.log("state set on click");
   }
 
   render() {
@@ -280,8 +286,12 @@ class FancyGame extends React.Component {
     return (
       <div className="game-column">
         <img className="title" src="bamboosweeper.png" alt="Bamboosweeper"/>
+        <Menu pointing secondary>
+          <Menu.Item name='story' active={'story' === this.state.view} onClick={this.handleItemClick} />
+          <Menu.Item name='game' active={'game' === this.state.view} onClick={this.handleItemClick} />
+          <Menu.Item name='rank' active={'rank' === this.state.view} onClick={this.handleItemClick} />
+        </Menu>
         {view}
-
       </div>
     )
   }

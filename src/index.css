@@ -2,14 +2,16 @@ body {
   font: 15px "Century Gothic", Futura, sans-serif;
   margin: 0em;
   background-image: url("two-pandas.jpg");
+  background-size: 40%;
   background-repeat: no-repeat;
-  background-position: right;
+  background-position-x: right;
+  background-position-y: bottom;
   background-attachment: fixed;
 }
 
 .game-column {
   float: left;
-  width: 55%;
+  width: 60%;
 }
 
 .board-row:after {
@@ -45,7 +47,7 @@ body {
   margin-left: auto;
   margin-right: auto;
   display: block;
-  margin-top: 2em;
+  margin-top: 1em;
 }
 
 .grid {
