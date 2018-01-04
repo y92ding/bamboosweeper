@@ -250,7 +250,7 @@ class FancyGame extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      view: 'game',
+      view: 'intro',
       gridSize: {
         width: 15,
         height: 15,
