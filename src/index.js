@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'semantic-ui-css/semantic.min.css'
 import './index.css'
-import { Menu, Segment } from 'semantic-ui-react'
+import { Menu } from 'semantic-ui-react'
 
 class Square extends React.Component {
   onRightClick(e) {
@@ -262,19 +262,31 @@ class FancyGame extends React.Component {
 
   handleItemClick(e, {name}) {
     this.setState({view: name,});
-    console.log("state set on click");
   }
 
   render() {
-    var story = "Brenda the panda is hungry. She needs some bamboos.(To be continued...)"
     var view;
 
     switch (this.state.view) {
-      case 'story':
+      case 'intro':
         view = (
           <div>
             <img className="title" src="bamboosweeper.png" alt="Bamboosweeper"/>
-            <p className="story">{story}</p>
+            <p className="intro">
+              Brenda is a cute little panda, so cute that you really want to make friends with her.<br/>
+              But Brenda the panda would not become your friend easily.<br/>
+              She asks you to help her find her favourite food, bamboo shoots.<br/>
+              If you hurt her or disappoint her, she will become sad and run away from you.<br/>
+              But if you find all the bamboo shoots for Brenda, she will gladly be your new friend.<br/><br/><br/>
+              (Click 'Game' above to start your journey.)<br/><br/><br/>
+              How to play:<br/>
+              Left click on a square to tell Brenda where to go.<br/>
+              She will tell you how many bamboo shoots there are in the surrounding area.<br/>
+              If you left click on bamboos, Brenda will get hurt stepping on bamboo shoots.<br/><br/>
+              Right click on a square to tell Brenda where to collect bamboo shoots.<br/>
+              Her hunger points will decrease, and she will like you more.<br/>
+              If you right click on a square without bamboo, Brenda will be disappointed and stop trusting you.<br/>
+            </p>
           </div>
         );
         break;
@@ -290,9 +302,8 @@ class FancyGame extends React.Component {
 
     return (
       <div className="game-column">
-
         <Menu pointing secondary>
-          <Menu.Item name='story' active={'story' === this.state.view} onClick={this.handleItemClick} />
+          <Menu.Item name='intro' active={'intro' === this.state.view} onClick={this.handleItemClick} />
           <Menu.Item name='game' active={'game' === this.state.view} onClick={this.handleItemClick} />
           <Menu.Item name='rank' active={'rank' === this.state.view} onClick={this.handleItemClick} />
         </Menu>
