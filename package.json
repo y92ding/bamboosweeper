@@ -16,7 +16,7 @@
     "eject": "react-scripts eject",
     "deploy": "npm run build&&gh-pages -d build"
   },
-  "homepage": "http://y92ding.github.io/bamboosweeper",
+  "homepage": "http://y92ding.github.io/bamboosweeper-frontend",
   "devDependencies": {
     "gh-pages": "^1.1.0"
   }
