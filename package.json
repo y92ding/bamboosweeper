@@ -1,5 +1,5 @@
 {
-  "name": "basically-minesweeper",
+  "name": "bamboosweeper-frontend",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,7 +16,7 @@
     "eject": "react-scripts eject",
     "deploy": "npm run build&&gh-pages -d build"
   },
-  "homepage": "http://y92ding.github.io/basically-minesweeper",
+  "homepage": "http://y92ding.github.io/bamboosweeper",
   "devDependencies": {
     "gh-pages": "^1.1.0"
   }
