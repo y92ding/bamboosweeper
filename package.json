@@ -1,20 +1,12 @@
 {
-  "name": "bamboosweeper-frontend",
-  "version": "0.1.0",
-  "private": true,
+  "name": "bamboosweeper",
+  "version": "1.0.0",
+  "author": "Yue Ding",
+  "main": "index.js",
   "dependencies": {
-    "react": "^16.0.0",
-    "react-dom": "^16.0.0",
-    "react-scripts": "1.0.14",
-    "semantic-ui-css": "^2.2.12",
-    "semantic-ui-react": "^0.77.0"
+    "express": "^4.16.2"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject",
-    "deploy": "npm run build&&gh-pages -d build"
-  },
-  "proxy": "http://34.210.60.116:3001"
+    "start": "node index.js"
+  }
 }
