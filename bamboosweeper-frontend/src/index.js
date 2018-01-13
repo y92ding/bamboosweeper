@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
 import { Menu } from 'semantic-ui-react';
+const axios = require('axios');
 
 class Square extends React.Component {
   onRightClick(e) {
@@ -262,6 +263,12 @@ class FancyGame extends React.Component {
     this.setState({view: name,});
   }
 
+  getRankings() {
+    axios.get('/rankings').then((response) => {
+      return response.data;
+    });
+  }
+
   render() {
     var view;
 
@@ -292,7 +299,7 @@ class FancyGame extends React.Component {
         view = <SimpleGame className="board" size={this.state.boardSize} />;
         break;
       case 'rank':
-        view = <p className="rank">rank</p>;
+        view = <p className="rank">{this.getRankings()}</p>;
         break;
       default:
         console.error("Unexpected this.state.view... Abort!!!");
