@@ -17,6 +17,7 @@ app.get('/rankings', (req, res) => {
   res.send({
     yue: 'ding',
     tony: 'zhang',
+    cs: 'students',
   })
 })
 

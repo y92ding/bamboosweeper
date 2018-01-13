@@ -80,7 +80,6 @@ class SimpleGame extends React.Component {
     arr.fill('x', 0, size.bamboos);
     for (let i = 0; i < size.bamboos; i++) {
       let des = Math.floor(Math.random()*(size.width*size.height));
-      console.log(des);
       let temp = arr[i];
       arr[i] = arr[des];
       arr[des] = temp;
@@ -255,18 +254,39 @@ class FancyGame extends React.Component {
         height: 15,
         bamboos: 30,
       },
+      rankings: {},
     };
     this.handleItemClick = this.handleItemClick.bind(this);
   }
 
   handleItemClick(e, {name}) {
     this.setState({view: name,});
+  
+    if ('rank' === name) {
+      this.getRankings();
+    }
   }
 
   getRankings() {
-    axios.get('/rankings').then((response) => {
-      return response.data;
-    });
+    axios.get('/rankings')
+      .then((response) => {
+        this.setState({
+          rankings: response.data,
+        });
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error(error.response.data);
+          console.error(error.response.status);
+          console.error(error.response.headers);
+        } else if (error.request) {
+          console.error(error.request);
+        } else {
+          console.error('Error', error.message);
+        }
+       
+        console.error(error.config);
+      });
   }
 
   render() {
@@ -299,7 +319,13 @@ class FancyGame extends React.Component {
         view = <SimpleGame className="board" size={this.state.boardSize} />;
         break;
       case 'rank':
-        view = <p className="rank">{this.getRankings()}</p>;
+        var rankings = [];      
+        for (let key in this.state.rankings) {
+          if (this.state.rankings.hasOwnProperty(key)) {
+            rankings.push(<p>{key}</p>);
+          }
+        }       
+        view = <div className="rank">{rankings}</div>;
         break;
       default:
         console.error("Unexpected this.state.view... Abort!!!");

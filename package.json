@@ -10,6 +10,7 @@
     "body-parser": "^1.18.2"
   },
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "startall": "cd bamboosweeper-frontend && npm run build && cd - && node index.js"
   }
 }
