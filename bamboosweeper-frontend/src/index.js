@@ -254,14 +254,14 @@ class FancyGame extends React.Component {
         height: 15,
         bamboos: 30,
       },
-      rankings: {},
+      rankings: [],
     };
     this.handleItemClick = this.handleItemClick.bind(this);
   }
 
   handleItemClick(e, {name}) {
     this.setState({view: name,});
-  
+
     if ('rank' === name) {
       this.getRankings();
     }
@@ -284,7 +284,7 @@ class FancyGame extends React.Component {
         } else {
           console.error('Error', error.message);
         }
-       
+
         console.error(error.config);
       });
   }
@@ -319,13 +319,11 @@ class FancyGame extends React.Component {
         view = <SimpleGame className="board" size={this.state.boardSize} />;
         break;
       case 'rank':
-        var rankings = [];      
-        for (let key in this.state.rankings) {
-          if (this.state.rankings.hasOwnProperty(key)) {
-            rankings.push(<p>{key}</p>);
-          }
-        }       
-        view = <div className="rank">{rankings}</div>;
+        var rankings = [];
+        for (let i in this.state.rankings) {
+            rankings.push(<li>{this.state.rankings[i].name}<br/><br/><br/>{this.state.rankings[i].time}</li>);
+        }
+        view = <div className="rank"><ol>{rankings}</ol></div>;
         break;
       default:
         console.error("Unexpected this.state.view... Abort!!!");
