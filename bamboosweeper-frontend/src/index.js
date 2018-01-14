@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'semantic-ui-css/semantic.min.css';
 import './index.css';
-import { Menu } from 'semantic-ui-react';
+import { Menu, Table } from 'semantic-ui-react';
 const axios = require('axios');
 
 class Square extends React.Component {
@@ -321,9 +321,27 @@ class FancyGame extends React.Component {
       case 'rank':
         var rankings = [];
         for (let i in this.state.rankings) {
-            rankings.push(<li>{this.state.rankings[i].name}<br/><br/><br/>{this.state.rankings[i].time}</li>);
+            rankings.push(
+              <Table.Row>
+                <Table.Cell>{i+1}</Table.Cell>
+                <Table.Cell>{this.state.rankings[i].name}</Table.Cell>
+                <Table.Cell>{this.state.rankings[i].time}</Table.Cell>
+              </Table.Row>
+            );
         }
-        view = <div className="rank"><ol>{rankings}</ol></div>;
+        view = (
+          <Table basic='very' className="rank">
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell> </Table.HeaderCell>
+                <Table.HeaderCell>Name</Table.HeaderCell>
+                <Table.HeaderCell>Time</Table.HeaderCell>
+              </Table.Row>
+            </Table.Header>
+              {rankings}
+            <Table.Body>
+          </Table>
+        );
         break;
       default:
         console.error("Unexpected this.state.view... Abort!!!");

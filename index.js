@@ -20,7 +20,7 @@ app.get('/rankings', (req, res) => {
       console.error(err);
     }
     var collection = db.db('bamboosweeper-db').collection('rankings');
-    collection.find({}, {_id: false}).toArray((err, result) => {
+    collection.find({}, {_id: false}).sort({time:1}).toArray((err, result) => {
       if (err) {
         console.error(err);
       }
