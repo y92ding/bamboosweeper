@@ -262,7 +262,7 @@ class FancyGame extends React.Component {
   handleItemClick(e, {name}) {
     this.setState({view: name,});
 
-    if ('rank' === name) {
+    if ('rankings' === name) {
       this.getRankings();
     }
   }
@@ -318,9 +318,9 @@ class FancyGame extends React.Component {
       case 'game':
         view = <SimpleGame className="board" size={this.state.boardSize} />;
         break;
-      case 'rank':
+      case 'rankings':
         var rankings = [];
-        for (let i in this.state.rankings) {
+        for (let i = 0; i < this.state.rankings.length; i++) {
             rankings.push(
               <Table.Row>
                 <Table.Cell>{i+1}</Table.Cell>
@@ -330,17 +330,20 @@ class FancyGame extends React.Component {
             );
         }
         view = (
-          <Table basic='very' className="rank">
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell> </Table.HeaderCell>
-                <Table.HeaderCell>Name</Table.HeaderCell>
-                <Table.HeaderCell>Time</Table.HeaderCell>
-              </Table.Row>
-            </Table.Header>
-              {rankings}
-            <Table.Body>
-          </Table>
+          <div className="rankings">
+            <Table basic='very'>
+              <Table.Header>
+                <Table.Row>
+                  <Table.HeaderCell> </Table.HeaderCell>
+                  <Table.HeaderCell>Name</Table.HeaderCell>
+                  <Table.HeaderCell>Time</Table.HeaderCell>
+                </Table.Row>
+              </Table.Header>
+              <Table.Body>
+                {rankings}
+              </Table.Body>
+            </Table>
+          </div>
         );
         break;
       default:
@@ -352,7 +355,7 @@ class FancyGame extends React.Component {
         <Menu pointing secondary>
           <Menu.Item name='intro' active={'intro' === this.state.view} onClick={this.handleItemClick} />
           <Menu.Item name='game' active={'game' === this.state.view} onClick={this.handleItemClick} />
-          <Menu.Item name='rank' active={'rank' === this.state.view} onClick={this.handleItemClick} />
+          <Menu.Item name='rankings' active={'rankings' === this.state.view} onClick={this.handleItemClick} />
         </Menu>
         {view}
       </div>

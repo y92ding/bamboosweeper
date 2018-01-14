@@ -64,3 +64,11 @@ body {
   margin: 3em;
   display: block;
 }
+
+.rankings {
+  margin-left: 2em;
+  margin-right: 2em;
+  margin-top: 2em;
+  margin-bottom: 1em;
+  display: block;
+}
