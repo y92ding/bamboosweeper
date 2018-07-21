@@ -231,7 +231,7 @@ class SimpleGame extends React.Component {
   }
 
   render() {
-    if (this.state.status == "login") {
+    if (this.state.status === "login") {
       return (
         <button onClick={()=>{this.setState({status: "ready"})}}>
           login
