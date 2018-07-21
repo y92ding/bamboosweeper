@@ -40,8 +40,8 @@ class Board extends React.Component {
 class SimpleGame extends React.Component {
   constructor(props) {
     super(props);
-    this.startTime;
-    this.runTimer;
+    this.startTime = 0;
+    this.runTimer = 0;
     var secretBoard = this.makeSecretBoard(this.props.size);
     var squareCount = this.props.size.width * this.props.size.height;
     this.state = {
