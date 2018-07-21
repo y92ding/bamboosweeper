@@ -3,7 +3,8 @@ const app = express();
 const path = require('path');
 const MongoClient = require('mongodb').MongoClient;
 const bodyParser = require('body-parser');
-const mongoUrl = 'mongodb://yue:bamboosweeper@34.210.60.116:27017/bamboosweeper-db';
+const ip = require("ip");
+const mongoUrl = 'mongodb://yue:bamboosweeper@34.217.108.240:27017/bamboosweeper-db';
 
 app.listen('8080');
 
@@ -12,6 +13,7 @@ app.use(express.static(path.join(__dirname,'bamboosweeper-frontend/build')));
 
 app.get('/testing', (req, res) => {
   res.send("Hello world!");
+  console.dir ( ip.address() );
 });
 
 app.get('/rankings', (req, res) => {
