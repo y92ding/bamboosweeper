@@ -42,6 +42,7 @@ class SimpleGame extends React.Component {
     super(props);
     this.startTime = 0;
     this.runTimer = 0;
+    this.loginName = "unknown";
     var secretBoard = this.makeSecretBoard(this.props.size);
     var squareCount = this.props.size.width * this.props.size.height;
     this.state = {
@@ -52,6 +53,7 @@ class SimpleGame extends React.Component {
       caption: "Click 'Intro' above if you are not sure how to play. Enjoy the game :)",
       timer: 0.0,
     };
+    this.login = this.login.bind(this);
   }
 
   countSurroundingBamboos(pos, size, arr) {
@@ -177,7 +179,7 @@ class SimpleGame extends React.Component {
   onRightClickSquare(i) {
     if (this.state.status === "ready") {
       this.startTime = new Date().getTime();
-      this.startTimer = setInterval(()=>this.updateTimer(this), 100);
+      this.runTimer = setInterval(()=>this.updateTimer(this), 100);
       this.setState({
         status: "playing",
       })
@@ -223,6 +225,20 @@ class SimpleGame extends React.Component {
         status: "won",
         caption: "All bamboos are collected. You are Brenda's new friend now!!! :D",
       })
+      axios.post('/won', {name: this.loginName, time: this.state.timer})
+        .catch((error) => {
+          if (error.response) {
+            console.error(error.response.data);
+            console.error(error.response.status);
+            console.error(error.response.headers);
+          } else if (error.request) {
+            console.error(error.request);
+          } else {
+            console.error('Error', error.message);
+          }
+
+          console.error(error.config);
+        });
     } else {
       this.setState({
         caption: "Brenda the panda's hunger points: " + newHungerPoints,
@@ -230,18 +246,25 @@ class SimpleGame extends React.Component {
     }
   }
 
+  login() {
+    this.setState({status: "ready",});
+    this.loginName = "CAPITALPLAYER";
+  }
+
   render() {
     if (this.state.status === "login") {
       return (
-        <button onClick={()=>{this.setState({status: "ready"})}}>
+        <button onClick={this.login}>
           login
         </button>
       );
     }
-
     return (
       <div className="board">
-        <h3>{this.state.timer}</h3>
+        <h3>
+          {this.state.timer}
+          <div style={{float: "right"}}>{this.loginName}</div>
+        </h3>
         <Board size={this.props.size} board={this.state.playerBoard}
             onClickSquare={(i) => this.onClickSquare(i)}
             onRightClickSquare={(i)=>this.onRightClickSquare(i)}/>

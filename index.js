@@ -2,12 +2,11 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const MongoClient = require('mongodb').MongoClient;
-const bodyParser = require('body-parser');
 const mongoUrl = 'mongodb://yue:bamboosweeper@34.217.108.240:27017/bamboosweeper-db';
 
 app.listen('8080');
 
-app.use(bodyParser.json());
+app.use(express.json());
 app.use(express.static(path.join(__dirname,'bamboosweeper-frontend/build')));
 
 app.get('/testing', (req, res) => {
@@ -27,6 +26,27 @@ app.get('/rankings', (req, res) => {
       res.send(result);
       db.close();
     });
+  });
+});
+
+app.post('/won', (req, res) => {
+  console.log(req.body.name);
+  console.log(req.body.time);
+  MongoClient.connect(mongoUrl, (err, db) => {
+    if (err) {
+      console.error(err);
+    }
+    var collection = db.db('bamboosweeper-db').collection('rankings');
+    collection.insert({name: req.body.name, time: req.body.time});
+    setTimeout(() => {
+      collection.findOne({name: req.body.name, time: req.body.time},
+          function(err, item) {
+        if (err || req.body.name !== item.name || req.body.time !== item.time) {
+          console.error("Insert failed. " + err);
+        }
+        db.close();
+      })
+    }, 100);
   });
 });
 
