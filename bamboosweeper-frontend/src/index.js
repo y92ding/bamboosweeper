@@ -48,7 +48,7 @@ class SimpleGame extends React.Component {
       playerBoard: Array(squareCount).fill(null),
       secretBoard: secretBoard,
       hungerPoints: this.props.size.bamboos,
-      status: "ready",
+      status: "login",
       caption: "Click 'Intro' above if you are not sure how to play. Enjoy the game :)",
       timer: 0.0,
     };
@@ -231,6 +231,14 @@ class SimpleGame extends React.Component {
   }
 
   render() {
+    if (this.state.status == "login") {
+      return (
+        <button onClick={()=>{this.setState({status: "ready"})}}>
+          login
+        </button>
+      );
+    }
+
     return (
       <div className="board">
         <h3>{this.state.timer}</h3>
