@@ -30,8 +30,6 @@ app.get('/rankings', (req, res) => {
 });
 
 app.post('/won', (req, res) => {
-  console.log(req.body.name);
-  console.log(req.body.time);
   MongoClient.connect(mongoUrl, (err, db) => {
     if (err) {
       console.error(err);

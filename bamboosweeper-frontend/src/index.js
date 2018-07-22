@@ -42,7 +42,6 @@ class SimpleGame extends React.Component {
     super(props);
     this.startTime = 0;
     this.runTimer = 0;
-    this.loginName = "unknown";
     var secretBoard = this.makeSecretBoard(this.props.size);
     var squareCount = this.props.size.width * this.props.size.height;
     this.state = {
@@ -52,8 +51,10 @@ class SimpleGame extends React.Component {
       status: "login",
       caption: "Click 'Intro' above if you are not sure how to play. Enjoy the game :)",
       timer: 0.0,
+      loginName: "unknown",
     };
-    this.login = this.login.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   countSurroundingBamboos(pos, size, arr) {
@@ -98,8 +99,8 @@ class SimpleGame extends React.Component {
   }
 
   updateTimer(self) {
-    var newTime = (Math.floor((new Date().getTime() -
-        this.startTime) / 100) / 10).toFixed(1);
+    var newTime = parseFloat((Math.floor((new Date().getTime() -
+        this.startTime) / 100) / 10).toFixed(1));
     self.setState({
       timer: newTime,
     })
@@ -225,7 +226,7 @@ class SimpleGame extends React.Component {
         status: "won",
         caption: "All bamboos are collected. You are Brenda's new friend now!!! :D",
       })
-      axios.post('/won', {name: this.loginName, time: this.state.timer})
+      axios.post('/won', {name: this.state.loginName, time: this.state.timer})
         .catch((error) => {
           if (error.response) {
             console.error(error.response.data);
@@ -246,24 +247,31 @@ class SimpleGame extends React.Component {
     }
   }
 
-  login() {
+  handleLogin(event) {
+    if (event.target.name === "name") {
+      this.setState({loginName: event.target.value});
+    }
+  }
+
+  handleSubmit(event) {
     this.setState({status: "ready",});
-    this.loginName = "CAPITALPLAYER";
+    event.preventDefault();
   }
 
   render() {
     if (this.state.status === "login") {
       return (
-        <button onClick={this.login}>
-          login
-        </button>
+        <form onSubmit={this.handleSubmit}>
+          Choose a username: <input type="text" name="name" value={this.state.loginName} onChange={this.handleLogin}/>
+          <input type="submit" value="Submit"/>
+        </form>
       );
     }
     return (
       <div className="board">
         <h3>
           {this.state.timer}
-          <div style={{float: "right"}}>{this.loginName}</div>
+          <div style={{float: "right"}}>{this.state.loginName}</div>
         </h3>
         <Board size={this.props.size} board={this.state.playerBoard}
             onClickSquare={(i) => this.onClickSquare(i)}
