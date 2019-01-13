@@ -55,6 +55,7 @@ class SimpleGame extends React.Component {
     };
     this.handleLogin = this.handleLogin.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.restartGame = this.restartGame.bind(this);
   }
 
   countSurroundingBamboos(pos, size, arr) {
@@ -146,7 +147,7 @@ class SimpleGame extends React.Component {
       })
     } else if (this.state.status !== "playing") {
       this.setState({
-        caption: "The game has ended. Ctrl+R to play again.",
+        caption: "The game has ended. Hit Restart to play again.",
       })
       return;
     }
@@ -186,7 +187,7 @@ class SimpleGame extends React.Component {
       })
     } else if (this.state.status !== "playing") {
       this.setState({
-        caption: "The game has ended. Ctrl+R to play again.",
+        caption: "The game has ended. Hit Restart to play again.",
       })
       return;
     }
@@ -258,20 +259,46 @@ class SimpleGame extends React.Component {
     event.preventDefault();
   }
 
+  restartGame() {
+    var secretBoard = this.makeSecretBoard(this.props.size);
+    var squareCount = this.props.size.width * this.props.size.height;
+    clearInterval(this.runTimer);
+    this.runTimer = 0;
+
+    this.setState({
+      playerBoard: Array(squareCount).fill(null),
+      secretBoard: secretBoard,
+      hungerPoints: this.props.size.bamboos,
+      status: "ready",
+      caption: "Click 'Intro' above if you are not sure how to play. Enjoy the game :)",
+      timer: 0.0,
+    });
+  }
+
   render() {
     if (this.state.status === "login") {
       return (
         <form onSubmit={this.handleSubmit}>
-          Choose a username: <input type="text" name="name" value={this.state.loginName} onChange={this.handleLogin}/>
-          <input type="submit" value="Submit"/>
+          <span>Choose a username: </span>
+          <div class="ui transparent small input">
+            <input type="text" name="name"
+              value={this.state.loginName} onChange={this.handleLogin}/>
+          </div>
+          <input class="compact ui basic button" type="submit" value="Play!"/>
         </form>
       );
     }
+
     return (
       <div className="board">
         <h3>
           {this.state.timer}
-          <div style={{float: "right"}}>{this.state.loginName}</div>
+          <div style={{float: "right"}}>
+            <button class="compact ui basic button" onClick={this.restartGame}>
+              Restart
+            </button>
+            {this.state.loginName}
+          </div>
         </h3>
         <Board size={this.props.size} board={this.state.playerBoard}
             onClickSquare={(i) => this.onClickSquare(i)}
@@ -280,7 +307,6 @@ class SimpleGame extends React.Component {
       </div>
     );
   }
-
 };
 
 class FancyGame extends React.Component {
