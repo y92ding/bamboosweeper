@@ -36,19 +36,27 @@ app.post('/won', (req, res) => {
     }
     var collection = db.db('bamboosweeper-db').collection('rankings');
     // temporary fix for duplicate insertion bug
-    if (collection.countDocuments({name: req.body.name, time: req.body.time},
-        {limit: 1}) == 0) {
-      collection.insert({name: req.body.name, time: req.body.time});
-      setTimeout(() => {
-        collection.findOne({name: req.body.name, time: req.body.time},
-            function(err, item) {
-          if (err || req.body.name !== item.name || req.body.time !== item.time) {
-            console.error("Insert failed. " + err);
-          }
-          db.close();
-        })
-      }, 100);
-    }
+    collection.countDocuments({name: req.body.name, time: req.body.time},
+        {limit: 1}, (err, result) => {
+      if (err) {
+        console.error(err);
+      }
+      if (result == 0) {
+        console.log("inserting");
+        collection.insert({name: req.body.name, time: req.body.time});
+        setTimeout(() => {
+          collection.findOne({name: req.body.name, time: req.body.time},
+              function(err, item) {
+            if (err || req.body.name !== item.name || req.body.time !== item.time) {
+              console.error("Insert failed. " + err);
+            }
+            db.close();
+          })
+        }, 100);
+      } else {
+        console.error("Attempting to insert duplicate record...");
+      }
+    });
   });
 });
 
