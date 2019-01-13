@@ -35,16 +35,20 @@ app.post('/won', (req, res) => {
       console.error(err);
     }
     var collection = db.db('bamboosweeper-db').collection('rankings');
-    collection.insert({name: req.body.name, time: req.body.time});
-    setTimeout(() => {
-      collection.findOne({name: req.body.name, time: req.body.time},
-          function(err, item) {
-        if (err || req.body.name !== item.name || req.body.time !== item.time) {
-          console.error("Insert failed. " + err);
-        }
-        db.close();
-      })
-    }, 100);
+    // temporary fix for duplicate insertion bug
+    if (collection.countDocuments({name: req.body.name, time: req.body.time},
+        {limit: 1}) == 0) {
+      collection.insert({name: req.body.name, time: req.body.time});
+      setTimeout(() => {
+        collection.findOne({name: req.body.name, time: req.body.time},
+            function(err, item) {
+          if (err || req.body.name !== item.name || req.body.time !== item.time) {
+            console.error("Insert failed. " + err);
+          }
+          db.close();
+        })
+      }, 100);
+    }
   });
 });
 
